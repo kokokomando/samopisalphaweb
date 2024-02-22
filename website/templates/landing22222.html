@@ -1,0 +1,57 @@
+﻿﻿{% extends "basebase.html" %}
+
+{% block title %}Samopis Rozpocznij{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        <div class="route" id="welcome"></div>
+        <div id="applanding">
+            <div class="app-view">
+                
+                <div class="logolanding">
+                <img src="./static/logo.png">
+            </div>
+                <header class="app-header">
+                    <h1 id="typing-text" style="text-align: center;"></h1>
+                
+                    <h1 id="typing-text2" style="text-align: center;"></h1>
+                </header>
+            </div>
+
+            <!-- Rest of your form content -->
+
+            <a href="#welcome" class="btn app-button" onclick="document.querySelector('form').submit()">Zaloguj</a>
+        </div>
+
+        <div class="app-bar">
+            <div class="app-menu-icon"></div>
+        </div>
+    </form>
+
+    <script>
+        const text = "Automatyczny Generator";
+        const text2 = "Dokumentów ";
+        let charIndex = 0;
+        let charIndex2 = 0;
+        let typingSpeed = 50; // Adjust typing speed (in milliseconds)
+    
+        function type() {
+            if (charIndex < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, typingSpeed);
+            }
+        }
+    
+        function type2() {
+            if (charIndex2 < text2.length) {
+                document.getElementById("typing-text2").innerHTML += text2.charAt(charIndex2);
+                charIndex2++;
+                setTimeout(type2, typingSpeed);
+            }
+        }
+    
+        type(); // Start typing the first text
+        setTimeout(type2, 1000); // Delay the start of the second text typing after the first text finishes
+    </script>
+{% endblock %}

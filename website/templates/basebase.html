@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+
+  <title>{% block title %}Samopis{% endblock %}</title>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="./static/bootstrap.css">
+    <link rel="stylesheet" href="./static/styleNotification.css">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="./static/landingarrow.css">
+    <link rel="stylesheet" href="./static/style1.css">
+    <link rel="stylesheet" href="./static/style3.css">
+    <link rel="stylesheet" href="./static/landingbutton.css">
+    <link rel="stylesheet" href="./static/loginlist.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&amp;family=Quicksand:wght@300&amp;display=swap'
+    
+
+
+
+
+
+
+
+
+
+</head>
+
+<style>
+    body {
+        background: #E3E0D1;
+
+        background-size: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-family: 'Barlow', sans-serif;
+        
+    }
+</style>
+
+<body>
+
+    
+
+
+      <a href="/login" style="max-width: 7.2em; margin-right: auto;">
+        <img src="./static/logo.png" width="90%" height="20%" style="margin-left: 1vw;" href="/login" >
+    
+
+
+    
+        
+            {% with messages = get_flashed_messages(with_categories=true) %} {% if
+            messages %} {% for category, message in messages %} {% if category ==
+            'error' %}
+            <div class="alert-container">
+            <div class="alert fade alert-simple alert-danger alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show" role="alert" data-brk-library="component__alert" role="alert">
+                {{ message }}
+
+            </div>
+          </div>
+            {% else %}
+            <div class="alert-container">
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+                {{ message }}
+
+            </div>
+          </div>
+            {% endif %} {% endfor %} {% endif %} {% endwith %}
+        </div>
+            
+            
+                
+            </a>
+
+
+
+        </div>
+        </div>
+        </div>
+        </div>
+      </div>
+    </ul>
+    </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block content %} {% endblock %}
+
+
+    {% block javascript %}
+
+
+
+
+
+
+{% endblock %}
+</html>

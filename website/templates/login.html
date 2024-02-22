@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Samopis Rozpocznij
+{% endblock %}
+
+{% block content %}
+    <style>
+        /* Change the stroke color of the class "st1" to blue */
+        .st1 {
+            stroke: rgb(4, 92, 90);
+        }
+
+        .st0 {
+            stroke: rgb(4, 92, 90);
+        }
+    </style>
+
+    <div id="app11" onclick="rotateRight()">
+        <div class="app1-view">
+            <header class="app-header">
+                <h1>Zarejestruj się</h1>
+                <h2>
+                    <span class="app-subheading">
+                        Wypełnij aby <br> stworzyć konto.
+                    </span>
+                </h2>
+            </header>
+
+            <input type="email1" class="NewInput" id="email" name="email" required pattern=".*\.\w{2,}" placeholder="Adres e-mail" />
+
+            <input type="text" class="NewInput" id="firstName" name="firstName" placeholder="Twoje Imię" />
+
+            <input type="password" class="NewInput" id="password1" name="password1" placeholder="Hasło" />
+
+            <input type="password" style="top: calc(58% + -1vh)" class="NewInput" id="password2" name="password2" placeholder="Potwierdź Hasło" />
+
+            <a href="#welcome" class="btn app-button" onclick="document.querySelector('form').submit()">Zarejestuj</a>
+        </div>
+
+        <div class="app-register">
+            Masz już konto? <a href="/login"> Zaloguj się</a>
+        </div>
+    </div>
+
+    <div id="app22" onclick="rotateLeft()">
+        <div class="app-view">
+        </div>
+    </div>
+
+    <form method="POST">
+        <div class="route" id="welcome"></div>
+        <div id="app">
+            <div class="app-view">
+                <header class="app-header">
+                    <img src="./static/landinglogo.png" width="90%" height="15%" style="margin-left: 1vw; bottom: 2vh;">
+                    <h2 style="text-align: center; margin-bottom: 6%;">
+                        <span class="app-subheading" style="color: rgb(4, 92, 90); font-weight: bold;">
+                            zaloguj się
+                        </span>
+                        <span style="color: black;">albo </span>
+                        <span style="color: #8F4701; font-weight: bold;">obejrzyj <br/></span>
+                        <span style="color: black;">film instruktażowy</span>
+                    </h2>
+
+                    <div class="video-container" style="display:flex">
+                        <video controls width="75%" height="75%" style=" margin-left: 13%;  preload="metadata">
+                            <source src="./static/Line Handling Accident Prevention.mp4#t=0.5" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </header>
+
+                <input type="email" class="NewInput" id="email" name="email" required pattern=".*\.\w{2,}" placeholder="Adres e-mail" autocomplete="email" />
+
+                <input type="password" class="NewInput" required placeholder="Hasło" id="password" name="password" autocomplete="current-password" />
+
+                <a href="#welcome" input type="button" class="btn app-button" onclick="document.querySelector('form').submit()" style="font-weight: bold;">Zaloguj</a>
+            </form>
+
+            <div class="app-register" style="color: black">
+                Nie masz konta? <a href="/sign-up" style="color: black; font-weight: bold;"> Zarejestruj się</a>
+            </div>
+
+            <svg id="svg-lines" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 284.2 152.7" xml:space="preserve">
+                <path class="st0" d="M37.7,107.3h222.6c12,0,21.8,9.7,21.8,21.7s-9.7,21.8-21.8,21.8c0,0-203.6,0-222.6,0S2.2,138.6,2.2,103.3c0-52,113.5-101.5,141-101.5c13.5,0,21.8,9.7,21.8,21.8s-9.7,21.7-21.8,21.7s-21.8-9.7-21.8-21.7s9.7-21.8,21.8-21.8" />
+                <path class="st1" d="M260.2,76.3L250,87.8l-9-9c-6.2-6.2,2-24.7,17.2-24.7c15.2,0,23.9,17.7,23.9,29.7s-11.7,23.5-23.9,23.5h-10.2"></path>
+            </svg>
+
+        </div>
+
+        <div class="app-bar">
+            <div class="app-menu-icon"></div>
+        </div>
+    </div>
+
+    <div id="rotateLeftButton" class="arrow left" style="scale: 8.0;"></div>
+
+    <div id="rotateRightButton" class="arrow right" style="scale: 8.0;"></div>
+
+
+    
+    <script src="./static/loginscripts.js"></script>
+{% endblock %}

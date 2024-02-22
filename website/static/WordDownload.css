@@ -1,0 +1,115 @@
+
+
+
+.box{
+  width: 300px;
+  height: 85px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #fff;
+  position: absolute;
+  top: calc(50% - 45px);
+  top: -webkit-calc(50% - 45px);
+  left: calc(50% - 150px);
+  left: -webkit-calc(50% - 150px);
+  cursor: pointer;
+  border: 1px solid #fff;
+}
+
+.box:hover{
+  border: 1px solid #7ECCFD;
+  background: #F3F9FD;
+}
+
+.box:hover ~ .doc:before{
+  border-top: 25px solid #F3F9FD;
+}
+
+.box span{
+  font-family: Arial;
+  font-size: 14px;
+  position: absolute;
+  top: 48px;
+  left: 80px;
+  color: #aaa;
+}
+
+.box span:first-of-type{
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  top: 28px;
+  left: 80px;
+  color: #333;
+}
+
+.doc{
+  width: 53px;
+  height: 70px;
+  background: #2295E1;
+  border-radius: 3px;
+  position: absolute;
+  top: calc(50% - 37px);
+  top: -webkit-calc(50% - 37px);
+  left: calc(50% - 141px);
+  left: -webkit-calc(50% - 141px);
+  scale: 0.7;
+  box-shadow: inset 8px 0 0 #2295E1,
+              inset -8px 0 0 #2295E1,
+              inset 0 12px 0 #2295E1,
+              inset 0 16px 0 rgba(255,255,255,0.8),
+              inset 0 27px 0 #2295E1,
+              inset 0 31px 0 rgba(255,255,255,0.8),
+              inset 0 42px 0 #2295E1,
+              inset 0 46px 0 rgba(255,255,255,0.8),
+              inset 0 56px 0 #2295E1,
+              inset 0 60px 0 rgba(255,255,255,0.8);
+              
+}
+
+.doc:before{
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 0px;
+  height: 0px;
+  border-bottom: 25px solid transparent;
+  border-left: 25px solid transparent;
+  border-top: 25px solid #fff;
+}
+
+.doc:after{
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: 0px;
+  width: 0px;
+  height: 0px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid #197EBD;
+}
+
+.downloading{
+  display: none;
+}
+
+.wrapper{
+  width: 280px;
+  margin-left: 10px;
+  height: 5px;
+  border: 1px solid #7ECCFD;
+  border-radius: 100px;
+  padding: 0;
+  margin-top: 43px;
+}
+
+.loader{
+  width: 10px;
+  background: #7ECCFD;
+  height: 5px;
+  border-radius: 100px 0 0 100px;
+  margin: 0;
+}

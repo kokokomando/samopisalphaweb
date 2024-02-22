@@ -1,0 +1,1060 @@
+{% extends "base.html" %} {% block title %}Sprzedaż Lokalu{% endblock %} {% block content
+%}
+
+
+
+
+<head>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+            integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./static/WpiszKW/styleCon.css">
+    <!-- Include jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Include jQuery Easing Plugin AFTER jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    
+    <script src="./static/WpiszKW/validateForm.js"></script>
+    <script src="./static/WpiszKW/validateFormNOMSG.js"></script>
+    
+    
+    <script src="./static/WpiszKW/FormKwNext.js"></script>
+    <script src="./static/WordDownload.js"></script>
+    <link rel="stylesheet" href="./static/WordDownload.css">
+ 
+
+   
+
+
+    
+    <script src="./static/WpiszKW/ObliczKontrolna.js"></script>
+    <script src="./static/WpiszKW/addZeros.js"></script>
+    <link rel="stylesheet" href="./static/styleChat.css">
+    <link rel="stylesheet" href="./static/downloadbuttom.css">
+    
+
+</head>
+
+
+<div class="message-box">
+    <h2>Chat Room: {{room}}</h2>
+    <h3>email: {{email}}</h3>
+    
+    <h5>Name: {{name}}</h5>
+    <h6>RodzajUmowy: {{RodzajUmowy}}</h6>
+
+    <div class="messages" id="messages"></div>
+    <div class="inputs">
+        <input type="text"
+               rows="3"
+               placeholder="Message"
+               name="message"
+               id="message" />
+        <button type="button" name="send" id="send-btn" onClick="sendMessage()">
+            Send
+        </button>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    var socketio = io();
+    var jestemVariable = false;
+
+    const messages = document.getElementById("messages");
+
+    const createMessage = (name, msg) => {
+        const content = `
+    <div class="text">
+        <span>
+            <strong>${name}</strong>: ${msg}
+        </span>
+        <span class="muted">
+            ${new Date().toLocaleString()}
+        </span>
+    </div>
+    `;
+
+    const containsSubstring = msg.includes("jestem");
+    const containsLeft = msg.includes("Left");
+    const containsKolejka = msg.includes("KOLEJKA");
+    const containsElo = msg.includes("elo");
+    const containsHHTP = msg.includes("HHTP");
+    const containsERROR = msg.includes("ERROR");
+
+    const divToReplace = document.querySelector('.footer_divider.grad_pb');
+    var alertElement = document.querySelector('.alert-warning[style="display: none;"]');
+    var infoElement = document.querySelector('.alert-info[style="display: none;"]');
+    var ERRORElement = document.querySelector('.alert-danger[style="display: none;"]');
+
+  
+
+
+    if (containsElo) {
+      const originalStyle = infoElement.getAttribute('style');
+
+// Remove the style attribute
+infoElement.removeAttribute('style');
+
+// After 5 seconds, set the original style attribute back
+setTimeout(function() {
+  infoElement.setAttribute('style', originalStyle);
+}, 5000); // 5000 milliseconds (5 seconds)
+}
+
+
+
+if (containsERROR) {
+      const originalStyle = ERRORElement.getAttribute('style');
+
+// Remove the style attribute
+ERRORElement.removeAttribute('style');
+
+// After 5 seconds, set the original style attribute back
+setTimeout(function() {
+  ERRORElement.setAttribute('style', originalStyle);
+}, 5000); // 5000 milliseconds (5 seconds)
+}
+
+
+    if (containsSubstring) {
+    jestemVariable = true; // Set the global variable to true if the message contains "jestem"
+  }
+
+
+
+  if (containsHHTP) {             //NIE DZIAŁĄ !
+
+    function replaceDivWithButton() {
+  const divToReplace = document.querySelector('.footer_divider.grad_pb');
+
+  if (divToReplace) {
+      // Create a new form element
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/download_files';
+
+      // Create an input element for folder_name
+      const folderNameInput = document.createElement('input');
+      folderNameInput.type = 'hidden';
+      folderNameInput.name = 'folder_name';
+      folderNameInput.value = '{{room}}';
+
+      // Create a button element
+      const button = document.createElement('button');
+      button.type = 'submit';
+      
+      
+
+      const wordDocumentSpan = document.createElement('span');
+    wordDocumentSpan.textContent = 'Word Document';
+    const downloadSpan = document.createElement('span');
+    downloadSpan.textContent = 'Download';
+
+    // Append the spans to the new div
+    
+
+    // Create a new div element for "downloading"
+
+    const BoxDiv = document.createElement('div');
+    BoxDiv.className = 'box';
+
+    BoxDiv.appendChild(wordDocumentSpan);
+    BoxDiv.appendChild(document.createElement('br')); // Line break
+    BoxDiv.appendChild(downloadSpan);
+
+    const downloadingDiv = document.createElement('div');
+    downloadingDiv.className = 'downloading';
+
+    // Create a new div element for "wrapper"
+    const wrapperDiv = document.createElement('div');
+    wrapperDiv.className = 'wrapper';
+
+    // Create a new div element for "loader"
+    const loaderDiv = document.createElement('div');
+    loaderDiv.className = 'loader';
+
+    downloadingDiv.appendChild(wrapperDiv);
+
+    // Append the loaderDiv to the wrapperDiv
+    wrapperDiv.appendChild(loaderDiv);
+
+    // Append the wrapperDiv to the downloadingDiv
+    
+    // Create a new div element for "doc"
+    const docDiv = document.createElement('div');
+    docDiv.className = 'doc';
+
+    button.appendChild(BoxDiv);
+    button.appendChild(downloadingDiv);
+    button.appendChild(docDiv);
+
+      // Append the input and button to the form
+      form.appendChild(folderNameInput);
+      form.appendChild(button);
+      
+
+      // Replace the div with the form
+      divToReplace.replaceWith(form);
+  }
+}
+
+     
+          replaceDivWithButton();
+
+
+  }
+  
+
+  if (containsLeft) {
+
+    const originalStyle = alertElement.getAttribute('style');
+
+// Remove the style attribute
+alertElement.removeAttribute('style');
+
+// After 5 seconds, set the original style attribute back
+setTimeout(function() {
+  alertElement.setAttribute('style', originalStyle);
+}, 5000); // 5000 milliseconds (5 seconds)
+
+    // Remove the 'style' attribute to display the element  
+  }
+
+
+  if (containsKolejka) {
+  const match = msg.match(/KOLEJKA.*?\((\d+)\)/); // Extract the number in parentheses
+  const numberInParentheses = match[1]; // Get the captured number
+  console.log("Found number in parentheses:", numberInParentheses);
+  
+  if (numberInParentheses > 0) {
+    var chatDiv = document.getElementById("chat1");
+        chatDiv.style.removeProperty("display");
+        var contactNameElement = chatDiv.querySelector(".contact_nameKolejka");
+        
+    contactNameElement.textContent = "Twoja pozycja w kolejce to:"  + numberInParentheses ;
+  }
+}
+        messages.innerHTML += content;
+
+    };
+
+
+
+  
+
+    socketio.on("message", (data) => {
+    // Ensure that validateFormNOMSG is a function, and call it to get the result
+        createMessage(data.name, data.message);
+    
+});
+
+
+    const sendMessage = () => {
+    
+        const form = document.getElementById("msform"); // Replace with your form's ID
+        const formData = new FormData(form);
+        const umowa = document.getElementById("umowa");
+        const UmowaValue = "++" + umowa.value + "@"; // Use 'umowa' instead of 'input3'
+
+        // Check if any input values are empty before sending the message
+        if (Array.from(formData.values()).some(value => value.trim() === "")) {
+            return;
+        }
+
+        // Create a message that includes the values from all input elements and 'UmowaValue'
+        const messageValues = Array.from(formData.entries()).map(([key, value]) => {
+            return "%" + value + "%"; // Customize the format as needed
+        });
+
+        // Add 'UmowaValue' to the array of message values
+        messageValues.push(UmowaValue);
+
+        // Join all values into a single message string
+        const message = messageValues.join(", ");
+
+        // Send the message via socket.io
+        socketio.emit("message", { data: message });
+   
+};
+
+
+
+</script>
+
+
+
+
+
+{% for msg in messages %}
+<script type="text/javascript">
+  createMessage("{{msg.name}}", "{{msg.message}}");
+</script>
+{% endfor %}
+
+
+
+
+
+
+
+
+
+<input type="hidden" id="umowa" name="umowa" value= {{RodzajUmowy}} >
+
+
+<!-- multistep form -->
+<form id="msform" class="msform5">
+    <!-- progressbar -->
+    <ul id="progressbar">
+        <li class="active">Wpisz Dane</li>
+        <li>Połącz się z serwerem</li>
+        <li>Poczekaj i odbierz</li>
+    </ul>
+    <!-- fieldsets -->
+    <fieldset>
+      <header class="app-header" style="padding:1vh;">
+      <span class="app-subheading" style="font-size: 60%; text-transform: uppercase;">
+        <h3 class="fs-subtitle">{{RodzajUmowy}}</h3>
+      </span>
+      </header>
+
+        {% if user.is_authenticated %}
+
+        <input type="text" id="Email" name="email" placeholder="Email" value="{{email}}" readonly/>
+
+        {% else %}
+
+        <input type="text" id="Email" name="email" placeholder="Email" />
+
+        {% endif %}
+        
+
+
+        
+
+        <input type="text" name="input1" id="input1" placeholder="Znak Wydziału Sądu" oninput="this.value = this.value.toUpperCase();" list="options"/>
+        <datalist id="options">
+          <option value="WL1A"></option><option value="SU1A"></option><option value="OL1Y"></option>
+          <option value="PT1B"></option>
+          <option value="LU1B"></option>
+          <option value="RA2G"></option>
+          <option value="KO1B"></option>
+          <option value="BI1B"></option>
+          <option value="BI1P"></option>
+          <option value="BB1B"></option>
+          <option value="OL1B"></option>
+          <option value="ZA1B"></option>
+          <option value="TR1O"></option>
+          <option value="JG1B"></option>
+          <option value="EL1B"></option>
+          <option value="TO1B"></option>
+          <option value="OP1B"></option>
+          <option value="TR1B"></option>
+          <option value="LD1B"></option>
+          <option value="KS1B"></option>
+          <option value="KI1B"></option>
+          <option value="BY1B"></option>
+          <option value="KA1Y"></option>
+          <option value="SL1B"></option>
+          <option value="KA1B"></option>
+          <option value="LU1C"></option>
+          <option value="TO1C"></option>
+          <option value="PO1H"></option>
+          <option value="SL1C"></option>
+          <option value="KA1C"></option>
+          <option value="SZ1C"></option>
+          <option value="KR1C"></option>
+          <option value="PL1C"></option>
+          <option value="BB1C"></option>
+          <option value="PO2T"></option>
+          <option value="KR1K"></option>
+          <option value="CZ1C"></option>
+          <option value="SL1Z"></option>
+          <option value="KR2Y"></option>
+          <option value="KO1D"></option>
+          <option value="EL1D"></option>
+          <option value="SW1D"></option>
+          <option value="KA1D"></option>
+          <option value="TR1D"></option>
+          <option value="RZ1D"></option>
+          <option value="EL1E"></option>
+          <option value="OL1E"></option>
+          <option value="SI1G"></option>
+          <option value="GD1G"></option>
+          <option value="GD1Y"></option>
+          <option value="OL1G"></option>
+          <option value="GL1G"></option>
+          <option value="PO1G"></option>
+          <option value="SZ1O"></option>
+          <option value="TO1G"></option>
+          <option value="NS1G"></option>
+          <option value="GW1G"></option>
+          <option value="PL1G"></option>
+          <option value="PO1Y"></option>
+          <option value="LM1G"></option>
+          <option value="WA1G"></option>
+          <option value="PO1S"></option>
+          <option value="TO1U"></option>
+          <option value="SZ1G"></option>
+          <option value="SZ1Y"></option>
+          <option value="RA1G"></option>
+          <option value="ZG2K"></option>
+          <option value="LE1G"></option>
+          <option value="OP1G"></option>
+          <option value="BI2P"></option>
+          <option value="ZA1H"></option>
+          <option value="BY1I"></option>
+          <option value="EL1I"></option>
+          <option value="ZA1J"></option>
+          <option value="KZ1J"></option>
+          <option value="PR1J"></option>
+          <option value="GL1J"></option>
+          <option value="KS1J"></option>
+          <option value="LE1J"></option>
+          <option value="KA1J"></option>
+          <option value="JG1J"></option>
+          <option value="KI1J"></option>
+          <option value="KZ1A"></option>
+          <option value="JG1K"></option>
+          <option value="SZ1K"></option>
+          <option value="GD1R"></option>
+          <option value="KA1K"></option>
+          <option value="KI1I"></option>
+          <option value="KI1L"></option>
+          <option value="OP1U"></option>
+          <option value="TB1K"></option>
+          <option value="KN1N"></option>
+          <option value="KO1K"></option>
+          <option value="RA1K"></option>
+          <option value="KN1K"></option>
+          <option value="KO1L"></option>
+          <option value="KI1K"></option>
+          <option value="PO1K"></option>
+          <option value="GD1E"></option>
+          <option value="KR1P"></option>
+          <option value="ZA1K"></option>
+          <option value="LU1K"></option>
+          <option value="KS1K"></option>
+          <option value="ZG1K"></option>
+          <option value="KZ1R"></option>
+          <option value="KR2K"></option>
+          <option value="LD1K"></option>
+          <option value="GD1I"></option>
+          <option value="OP1K"></option>
+          <option value="KZ1E"></option>
+          <option value="OL1K"></option>
+          <option value="KR2E"></option>
+          <option value="CZ2C"></option>
+          <option value="SW1K"></option>
+          <option value="WA1L"></option>
+          <option value="LE1L"></option>
+          <option value="KS1E"></option>
+          <option value="PO1L"></option>
+          <option value="RZ1E"></option>
+          <option value="OL1L"></option>
+          <option value="NS1L"></option>
+          <option value="WL1L"></option>
+          <option value="RA1L"></option>
+          <option value="PR1L"></option>
+          <option value="LU1A"></option>
+          <option value="JG1L"></option>
+          <option value="LE1U"></option>
+          <option value="LU1I"></option>
+          <option value="CZ1L"></option>
+          <option value="JG1S"></option>
+          <option value="SL1L"></option>
+          <option value="GD1M"></option>
+          <option value="SL1M"></option>
+          <option value="KR1M"></option>
+          <option value="TB1M"></option>
+          <option value="KA1M"></option>
+          <option value="WR1M"></option>
+          <option value="PO2A"></option>
+          <option value="GW1M"></option>
+          <option value="SI1M"></option>
+          <option value="BY1M"></option>
+          <option value="EL2O"></option>
+          <option value="OL1M"></option>
+          <option value="NS2L"></option>
+          <option value="NS1M"></option>
+          <option value="CZ1M"></option>
+          <option value="KA1L"></option>
+          <option value="KR1Y"></option>
+          <option value="SZ1M"></option>
+          <option value="PL1M"></option>
+          <option value="BY1N"></option>
+          <option value="OL1N"></option>
+          <option value="KR2I"></option>
+          <option value="TB1N"></option>
+          <option value="SW2K"></option>
+          <option value="ZG1N"></option>
+          <option value="EL1N"></option>
+          <option value="GD2M"></option>
+          <option value="WA1N"></option>
+          <option value="NS1S"></option>
+          <option value="NS1T"></option>
+          <option value="PO1N"></option>
+          <option value="OP1N"></option>
+          <option value="PO1O"></option>
+          <option value="OL1C"></option>
+          <option value="OP1L"></option>
+          <option value="WR1E"></option>
+          <option value="KR1O"></option>
+          <option value="OL1O"></option>
+          <option value="KI1T"></option>
+          <option value="PT1O"></option>
+          <option value="OP1O"></option>
+          <option value="LU1O"></option>
+          <option value="KI1O"></option>
+          <option value="OS1O"></option>
+          <option value="KZ1O"></option>
+          <option value="EL1O"></option>
+          <option value="OS1M"></option>
+          <option value="KZ1W"></option>
+          <option value="WA1O"></option>
+          <option value="WR1O"></option>
+          <option value="KR1E"></option>
+          <option value="LD1P"></option>
+          <option value="SR2W"></option>
+          <option value="WA1I"></option>
+          <option value="RA2Z"></option>
+          <option value="PT1P"></option>
+          <option value="OL1P"></option>
+          <option value="PO1I"></option>
+          <option value="KI1P"></option>
+          <option value="KZ1P"></option>
+          <option value="SR2L"></option>
+          <option value="SZ2S"></option>
+          <option value="PO1P"></option>
+          <option value="PO2P"></option>
+          <option value="KR1H"></option>
+          <option value="OP1P"></option>
+          <option value="WA1P"></option>
+          <option value="OS1P"></option>
+          <option value="PR1P"></option>
+          <option value="PR1R"></option>
+          <option value="RA1P"></option>
+          <option value="KA1P"></option>
+          <option value="GD2W"></option>
+          <option value="LU1P"></option>
+          <option value="OS1U"></option>
+          <option value="SZ2T"></option>
+          <option value="PL1P"></option>
+          <option value="PL1L"></option>
+          <option value="GL1R"></option>
+          <option value="RA1R"></option>
+          <option value="PT1R"></option>
+          <option value="WL1R"></option>
+          <option value="LU1R"></option>
+          <option value="LD1R"></option>
+          <option value="PO1R"></option>
+          <option value="RZ1R"></option>
+          <option value="GL1S"></option>
+          <option value="GL1Y"></option>
+          <option value="LU1Y"></option>
+          <option value="WL1Y"></option>
+          <option value="RZ1Z"></option>
+          <option value="KI1S"></option>
+          <option value="KS1S"></option>
+          <option value="SU1N"></option>
+          <option value="SI1S"></option>
+          <option value="KA1I"></option>
+          <option value="BI3P"></option>
+          <option value="PR2R"></option>
+          <option value="SR1S"></option>
+          <option value="PL1E"></option>
+          <option value="KI1R"></option>
+          <option value="KR3I"></option>
+          <option value="KR2P"></option>
+          <option value="LD1H"></option>
+          <option value="PL1O"></option>
+          <option value="SI1P"></option>
+          <option value="BI1S"></option>
+          <option value="GD1S"></option>
+          <option value="KA1S"></option>
+          <option value="TB1S"></option>
+          <option value="KI1H"></option>
+          <option value="SZ1T"></option>
+          <option value="GD1A"></option>
+          <option value="KI1A"></option>
+          <option value="GW1K"></option>
+          <option value="OP1S"></option>
+          <option value="WR1T"></option>
+          <option value="RZ1S"></option>
+          <option value="KR1B"></option>
+          <option value="ZG2S"></option>
+          <option value="GW1U"></option>
+          <option value="SU1S"></option>
+          <option value="PO1A"></option>
+          <option value="SZ1S"></option>
+          <option value="KO1I"></option>
+          <option value="OL1S"></option>
+          <option value="GD2I"></option>
+          <option value="BY1U"></option>
+          <option value="RA1S"></option>
+          <option value="BY2T"></option>
+          <option value="KO1E"></option>
+          <option value="KR1S"></option>
+          <option value="GW1S"></option>
+          <option value="KN1S"></option>
+          <option value="SL1S"></option>
+          <option value="TB1T"></option>
+          <option value="GL1T"></option>
+          <option value="TR1T"></option>
+          <option value="GD1T"></option>
+          <option value="ZA1T"></option>
+          <option value="PT1T"></option>
+          <option value="TO1T"></option>
+          <option value="PO1T"></option>
+          <option value="WR1W"></option>
+          <option value="BY1T"></option>
+          <option value="TR2T"></option>
+          <option value="KN1T"></option>
+          <option value="KA1T"></option>
+          <option value="RZ2Z"></option>
+          <option value="KS2E"></option>
+          <option value="KR1W"></option>
+          <option value="WA3M"></option>
+          <option value="WA1M"></option>
+          <option value="WA2M"></option>
+          <option value="WA4M"></option>
+          <option value="WA5M"></option>
+          <option value="WA6M"></option>
+          <option value="CIKW"></option>
+          <option value="SW1W"></option>
+          <option value="KO1W"></option>
+          <option value="GD1W"></option>
+          <option value="KR1I"></option>
+          <option value="SR1W"></option>
+          <option value="GL1W"></option>
+          <option value="PO1E"></option>
+          <option value="WA1W"></option>
+          <option value="WR1L"></option>
+          <option value="WR1K"></option>
+          <option value="PO1F"></option>
+          <option value="ZG1W"></option>
+          <option value="PO2H"></option>
+          <option value="LM1W"></option>
+          <option value="OS1W"></option>
+          <option value="TO1W"></option>
+          <option value="PO1B"></option>
+          <option value="OL2G"></option>
+          <option value="SI1W"></option>
+          <option value="WL1W"></option>
+          <option value="LU1W"></option>
+          <option value="KI1W"></option>
+          <option value="GL1Z"></option>
+          <option value="NS1Z"></option>
+          <option value="LM1Z"></option>
+          <option value="ZA1Z"></option>
+          <option value="CZ1Z"></option>
+          <option value="SR1Z"></option>
+          <option value="LD1G"></option>
+          <option value="JG1Z"></option>
+          <option value="ZG1E"></option>
+          <option value="RA1Z"></option>
+          <option value="SW1Z"></option>
+          <option value="LE1Z"></option>
+          <option value="PO1Z"></option>
+          <option value="SR1L"></option>
+          <option value="RZ1A"></option>
+          <option value="SZ1L"></option>
+          <option value="LM1L"></option>
+          <option value="SI2S"></option>
+          <option value="LD1O"></option>
+          <option value="LU1U"></option>
+          <option value="LD1M"></option>
+          <option value="LD1Y"></option>
+          <option value="PO1M"></option>
+          <option value="PO1D"></option>
+          <option value="WR1S"></option>
+          <option value="SW1S"></option>
+          <option value="LU1S"></option>
+          <option value="KO2B"></option>
+          <option value="ZG1S"></option>
+          <option value="BY1S"></option>
+          <option value="SZ1W"></option>
+          <option value="ZG1G"></option>
+          <option value="ZG1R"></option>
+          <option value="BY1Z"></option>
+          <option value="GL1X"></option>
+          <option value="PL2M"></option>
+          <option value="PL1Z"></option>
+          <option value="BB1Z"></option>
+        </datalist>
+        <input type="text" name="input2" id="input2" placeholder="Numer Księgi Wieczystej" oninput="calculateKontrolna();" onblur="addLeadingZeros();" />
+
+
+ 
+
+
+        <p id="result" style="margin-bottom: 2vh; margin-top: 1vh;"></p>
+    
+        <input type="button" name="nextButton33, next, create" class="next action-button" value="Rozpocznij" onClick="sendMessage(); validateForm();" >
+        
+        
+       
+   
+
+        
+      </fieldset>
+
+    <fieldset>
+        <h2 class="fs-title">Social Profiles</h2>
+        <h3 id="step1-subtitle" class="fs-subtitle">Łączenie z systemem piszącym</h3>
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><br>
+
+        
+        <input type="button" name="next, create" class="next2 action-button" value="Next" style="display: none;" />
+    </fieldset>
+
+    <fieldset>
+        
+
+
+
+  
+
+        <div class="chat-container"  id="Chatdata">
+            <div class="divider"> </div>
+            <div class="phone_body">
+               <div class="chat" style="display: none;" id="chat1">
+                <img class="chat_avatar" style="background: transparent;" src="./static/queue (2).png">
+                 <div class="chat_info">
+                   <div class="contact_nameKolejka">Twoja pozycja w kolejce to: </div>
+                   <div class="contact_msg">zaczekaj, a pisanie rozpocznie się samo</div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">9:20 PM</div>
+                   <div class="chat_new grad_pb"> New </div>
+                 </div>
+              </div>
+
+              
+              <div class="chat" style="display: none;" id="chat2">
+                <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Adriano Canofre </div>
+                   <div class="contact_msg">:pxdd?</div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">8:12 PM</div>
+                   <div class="chat_new grad_pb"> New </div>
+                 </div>
+              </div>
+              
+              <div class="chat" style="display: none;" id="chat3">
+                <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">3?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                   <div class="chat_new grad_pb"> New </div>
+                 </div>
+              </div> 
+              <div class="chat" style="display: none;" id="chat4">
+                <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Adriano Canofre </div>
+                   <div class="contact_msg">4?</div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+              
+              <div class="chat" style="display: none;" id="chat5">
+                <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">5?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+                    <div class="chat" style="display: none;" id="chat6">
+                        <img class="chat_avatar" src="./static/robo.avif">
+
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">6?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+                    <div class="chat" style="display: none;" id="chat7">
+                        <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">7?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+                    <div class="chat" style="display: none;" id="chat8">
+                        <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">8t?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+                    <div class="chat"style="display: none;" id="chat9">
+                        <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">9?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+              <div class="chat"style="display: none;" id="chat10">
+                <img class="chat_avatar" src="./static/robo.avif">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">10?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+              
+              <div class="chat"style="display: none;" id="chat11">
+                <img class="chat_avatar" src="./static/queue.png">
+                 <div class="chat_info">
+                   <div class="contact_name">Patric Venturini </div>
+                   <div class="contact_msg">11?  </div>
+                 </div>
+                 <div class="chat_status">
+                   <div class="chat_date">Yesterday</div>
+                    
+                 </div>
+              </div>
+            </div> <!-- phonebody -->
+            
+            <div class="phone_footer">
+              <div class="footer_divider grad_pb"> </div>
+            </div>
+          </div>
+          
+        
+        </div>
+
+    </fieldset>
+</form>
+
+
+
+{% if RodzajUmowy == "sprzedaz" %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var nextButton = document.querySelector('.next');
+      var nextButton2 = document.querySelector('.next2');
+      var subtitle = document.getElementById('step1-subtitle');
+      var spinner = document.querySelector('.lds-spinner');
+      var timer;
+
+      // Store original content
+      var originalSubtitle = subtitle.textContent;
+      var originalSpinner = spinner.cloneNode(true); // Clone the spinner element
+      
+      if (nextButton && subtitle && spinner) {
+        
+          nextButton.addEventListener('click', function () {
+              // Assuming validateForm is a function that returns true or false
+              
+              clearTimeout(timer);
+              timer = setTimeout(function () {
+                  var newElement = document.createElement('div');
+                  newElement.className = 'success-checkmark';
+                  
+                  // Check if the message contains "jestem"
+                  // Implement this function to check the message content
+                  if (jestemVariable === true) {
+                      newElement.innerHTML = `
+                      <div class="check-icon">
+                          <span class="icon-line line-long"></span>
+                          <span class="icon-line line-tip"></span>
+                          <div class="icon-circle"></div>
+                          <div class="icon-fix"></div>
+                      </div>`;
+                      subtitle.textContent = 'New Subtitle';
+
+                      // Add a 2-second delay before clicking nextButton2
+                      setTimeout(function () {
+                          nextButton2.click();
+                      }, 1200);
+                  } else {
+                      newElement.innerHTML = `
+                      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                          <circle class="checkmark_circle" cx="26" cy="26" r="25" fill="none"/>
+                          <path class="checkmark_check" fill="none" d="M14.1 14.1l23.8 23.8 m0,-23.8 l-23.8,23.8"/>
+                      </svg>`;
+                      subtitle.textContent = 'Połączenie Nieudane';
+                  }
+
+                  spinner.parentNode.replaceChild(newElement, spinner);
+
+              }, 3000); // Changed to 5000 milliseconds (5 seconds)
+          });
+      
+    }
+  });
+</script>
+
+
+{% else %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var nextButton2 = document.querySelector('.next2');
+    var nextButton = document.getElementsByName('nextButton33, next, create')[0]; // Select the first element with the name "nextButton"
+    var subtitle = document.getElementById('step1-subtitle');
+    var spinner = document.querySelector('.lds-spinner');
+    var timer;
+
+      // Store original content
+      var originalSubtitle = subtitle.textContent;
+      var originalSpinner = spinner.cloneNode(true); // Clone the spinner element
+      
+      if (nextButton && subtitle && spinner) {
+          nextButton.addEventListener('click', function () {
+            
+              // Assuming validateForm is a function that returns true or false
+              
+              
+
+                  clearTimeout(timer);
+                  timer = setTimeout(function () {
+                      var newElement = document.createElement('div');
+                      newElement.className = 'success-checkmark';
+                      
+                      // Check if the message contains "jestem"
+                       // Implement this function to check the message content
+                      
+                      if (jestemVariable === true) {
+                          newElement.innerHTML = `
+                          <div class="check-icon">
+                                <span class="icon-line line-long"></span>
+                         <span class="icon-line line-tip"></span>
+                                 <div class="icon-circle"></div>
+                              <div class="icon-fix"></div>
+                          </div>`;
+                          subtitle.textContent = 'New Subtitle';
+                          nextButton2.click();
+                      } else {
+                          newElement.innerHTML = `
+                          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg">
+                              <circle class="checkmark_circle" cx="26" cy="26" r="25" fill="none"/>
+                              <path class="checkmark_check" fill="none" d="M14.1 14.1l23.8 23.8 m0,-23.8 l-23.8,23.8"/>
+                          </svg>`;
+                          subtitle.textContent = 'Połączenie Nieudane';
+                      }
+                      if(validateFormNOMSG()){
+                      spinner.parentNode.replaceChild(newElement, spinner);
+                      }
+                  }, 3000); // Changed to 5000 milliseconds (5 seconds)
+                
+          });
+      }
+    
+  });
+</script>
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+<script>
+    var nextButton2 = document.querySelector('.next2');
+
+    nextButton2.addEventListener('click', function () {
+        // Function to remove the "display: none;" style for a chat div by its ID
+    function showChat(chatId) {
+        var chatDiv = document.getElementById(chatId);
+        chatDiv.style.removeProperty("display");
+		var elem = document.getElementById('Chatdata');
+		elem.scrollTop = elem.scrollHeight;
+    }
+    
+    // Set a timeout to remove the "display: none;" style for chat1 after 1 second (1000 milliseconds)
+    setTimeout(function() {
+        showChat("chat1");
+    }, 1000);
+
+    // Set a timeout to remove the "display: none;" style for chat2 after 2 seconds (2000 milliseconds)
+    setTimeout(function() {
+        showChat("chat2");
+    }, 2000);
+	
+	    setTimeout(function() {
+        showChat("chat3");
+    }, 3000);
+	
+	    setTimeout(function() {
+        showChat("chat4");
+    }, 4000);
+	
+	    setTimeout(function() {
+        showChat("chat5");
+    }, 5000);
+	
+		    setTimeout(function() {
+        showChat("chat6");
+    }, 6000);
+	
+		    setTimeout(function() {
+        showChat("chat7");
+    }, 7000);
+	
+		    setTimeout(function() {
+        showChat("chat8");
+    }, 8000);
+	
+		    setTimeout(function() {
+        showChat("chat9");
+    }, 9000);
+	
+		    setTimeout(function() {
+        showChat("chat10");
+    }, 10000);
+	
+		    setTimeout(function() {
+        showChat("chat11");
+    }, 11000);
+});
+</script>
+  
+
+
+
+
+ {% endblock %}

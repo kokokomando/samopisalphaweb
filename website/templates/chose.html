@@ -1,0 +1,125 @@
+{% extends "base.html" %} {% block title %}Samopis Wybierz{% endblock %} {% block content
+%}
+
+
+
+<link rel="stylesheet" href="./static/bootstrap.css"> 
+
+<link rel="stylesheet" href="./static/downloadbuttom.css">
+    
+        
+
+
+
+            <div class="row" style="gap: 4vw;     
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);">
+            
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricingTable10">
+                        <div class="pricingTable-header">
+                            <h3 class="heading">Zgromadzenie<br>Formalne</h3>
+                            <span class="price-value">
+                                BOF
+                                
+                            </span>
+                        </div>
+                        <div class="pricing-content">
+                            <ul>
+                                <li>......</li>
+                                <li>.....</li>
+                                <li>......</li>
+                                <li>......</li>
+                            </ul>
+
+                            <!-- The form to submit the "RodzajUmowy" value -->
+                            <form action="/umowa" method="POST" id="ZgromadzenieFormalne">
+                                <!-- Hidden input field with the name "RodzajUmowy" and value "sprzedaz" -->
+                                <input type="hidden" name="RodzajUmowy" value="ZgromadzenieFormalne">
+                                <a href="#" class="btn-grad1" onclick="document.getElementById('ZgromadzenieFormalne').submit(); return false;">Rozpocznij</a>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricingTable10">
+                        <div class="pricingTable-header">
+                            <h3 class="heading">Umowa<br>Sprzedaży</h3>
+                            <span class="price-value">
+                                BOFS
+                                
+                            </span>
+                        </div>
+                        <div class="pricing-content">
+                            <ul>
+                                <li>......</li>
+                                <li>.....</li>
+                                <li>......</li>
+                                <li>......</li>
+                            </ul>
+
+                            <!-- The form to submit the "RodzajUmowy" value -->
+                            <form action="/umowa" method="POST" id="sprzedaz">
+                                <!-- Hidden input field with the name "RodzajUmowy" and value "sprzedaz" -->
+                                <input type="hidden" name="RodzajUmowy" value="sprzedaz">
+                                <a href="#" class="btn-grad1" onclick="document.getElementById('sprzedaz').submit(); return false;">Rozpocznij</a>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricingTable10">
+                        <div class="pricingTable-header">
+                            <h3 class="heading">Umowa<br>Przedwstępna</h3>
+                            <span class="price-value">
+                                <span class="currency"></span> BRF
+                                
+                            </span>
+                        </div>
+                        <div class="pricing-content">
+                            <ul>
+                                <li>......</li>
+                                <li>.....</li>
+                                <li>......</li>
+                                <li>......</li>
+                            </ul>
+                            <a href="/przedwstepna" class="btn-grad1">Wybierz</a>
+                        </div>
+                    </div>
+                </div>
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+    {% endblock %}
